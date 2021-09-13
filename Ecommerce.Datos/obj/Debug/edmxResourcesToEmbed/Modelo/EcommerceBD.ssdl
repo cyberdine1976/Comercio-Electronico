@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PedidosWebModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Articulos">
+    <Key>
+      <PropertyRef Name="IdArticulo" />
+    </Key>
+    <Property Name="IdArticulo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Codigo" Type="varchar" MaxLength="100" />
+    <Property Name="Descripcion" Type="varchar" MaxLength="100" />
+    <Property Name="Categoria" Type="int" />
+    <Property Name="Precio" Type="decimal" Precision="10" Scale="2" />
+  </EntityType>
+  <EntityType Name="Categoria de Articulos">
+    <Key>
+      <PropertyRef Name="IdCategoria" />
+    </Key>
+    <Property Name="IdCategoria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CodigoCategoria" Type="varchar" MaxLength="50" />
+    <Property Name="NombreCategoria" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Clientes">
+    <Key>
+      <PropertyRef Name="IdCliente" />
+    </Key>
+    <Property Name="IdCliente" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CodigoCliente" Type="varchar" MaxLength="50" />
+    <Property Name="Nombre" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="LineasDePedido">
+    <Key>
+      <PropertyRef Name="IdLineaDePedido" />
+    </Key>
+    <Property Name="IdLineaDePedido" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NumeroPedido" Type="int" />
+    <Property Name="CodArticulo" Type="int" />
+    <Property Name="CantidadPedida" Type="int" />
+    <Property Name="Precio" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="SubTotal" Type="decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="Pedido">
+    <Key>
+      <PropertyRef Name="IdPedido" />
+    </Key>
+    <Property Name="IdPedido" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NumeroPedido" Type="varchar" MaxLength="50" />
+    <Property Name="FechaPedido" Type="datetime" />
+    <Property Name="Cliente" Type="int" />
+    <Property Name="TerminoPago" Type="varchar" MaxLength="20" />
+    <Property Name="TotalPedido" Type="decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <Association Name="FK_Articulos_Categoria de Articulos">
+    <End Role="Categoria de Articulos" Type="Self.Categoria de Articulos" Multiplicity="0..1" />
+    <End Role="Articulos" Type="Self.Articulos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Categoria de Articulos">
+        <PropertyRef Name="IdCategoria" />
+      </Principal>
+      <Dependent Role="Articulos">
+        <PropertyRef Name="Categoria" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LineasDePedido_Articulos">
+    <End Role="Articulos" Type="Self.Articulos" Multiplicity="0..1" />
+    <End Role="LineasDePedido" Type="Self.LineasDePedido" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Articulos">
+        <PropertyRef Name="IdArticulo" />
+      </Principal>
+      <Dependent Role="LineasDePedido">
+        <PropertyRef Name="CodArticulo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LineasDePedido_Pedido">
+    <End Role="Pedido" Type="Self.Pedido" Multiplicity="0..1" />
+    <End Role="LineasDePedido" Type="Self.LineasDePedido" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Pedido">
+        <PropertyRef Name="IdPedido" />
+      </Principal>
+      <Dependent Role="LineasDePedido">
+        <PropertyRef Name="NumeroPedido" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Pedido_Clientes">
+    <End Role="Clientes" Type="Self.Clientes" Multiplicity="0..1" />
+    <End Role="Pedido" Type="Self.Pedido" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Clientes">
+        <PropertyRef Name="IdCliente" />
+      </Principal>
+      <Dependent Role="Pedido">
+        <PropertyRef Name="Cliente" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="PedidosWebModelStoreContainer">
+    <EntitySet Name="Articulos" EntityType="Self.Articulos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Categoria de Articulos" EntityType="Self.Categoria de Articulos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Clientes" EntityType="Self.Clientes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LineasDePedido" EntityType="Self.LineasDePedido" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Pedido" EntityType="Self.Pedido" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Articulos_Categoria de Articulos" Association="Self.FK_Articulos_Categoria de Articulos">
+      <End Role="Categoria de Articulos" EntitySet="Categoria de Articulos" />
+      <End Role="Articulos" EntitySet="Articulos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LineasDePedido_Articulos" Association="Self.FK_LineasDePedido_Articulos">
+      <End Role="Articulos" EntitySet="Articulos" />
+      <End Role="LineasDePedido" EntitySet="LineasDePedido" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LineasDePedido_Pedido" Association="Self.FK_LineasDePedido_Pedido">
+      <End Role="Pedido" EntitySet="Pedido" />
+      <End Role="LineasDePedido" EntitySet="LineasDePedido" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Pedido_Clientes" Association="Self.FK_Pedido_Clientes">
+      <End Role="Clientes" EntitySet="Clientes" />
+      <End Role="Pedido" EntitySet="Pedido" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
